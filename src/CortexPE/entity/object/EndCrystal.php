@@ -43,6 +43,7 @@ use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\ListTag;
+use pocketmine\nbt\tag\CompoundTag;
 
 class EndCrystal extends Entity {
 
@@ -53,13 +54,16 @@ class EndCrystal extends Entity {
 	public $height = 0.98;
 	public $width = 0.98;
 
-	public function initEntity(): void{
+	public $namedtag = null;
+
+	public function initEntity(CompoundTag $nbt): void{
+		$this->namedtag = $nbt;
 		if(!$this->namedtag->hasTag(self::TAG_SHOW_BOTTOM, ByteTag::class)){
 			$this->namedtag->setByte(self::TAG_SHOW_BOTTOM, 0);
 		}
 
 		// TODO: The data flag for showing bottom & beam? maybe... I still haven't decompiled the MCPE Source code... takes a long time.
-		parent::initEntity();
+		parent::initEntity($this->namedtag);
 	}
 
 	public function isShowingBottom(): bool{

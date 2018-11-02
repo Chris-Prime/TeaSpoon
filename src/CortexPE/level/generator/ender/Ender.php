@@ -55,7 +55,8 @@ class Ender extends Generator {
 	/** @var Simplex */
 	private $noiseBase;
 
-	public function __construct(array $options = []){
+	public function __construct(ChunkManager $level, int $seed, array $options = []){
+		parent::__construct($level, $seed, $options);
 		if(self::$GAUSSIAN_KERNEL === null){
 			self::generateKernel();
 		}

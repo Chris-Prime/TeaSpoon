@@ -35,7 +35,7 @@ declare(strict_types = 1);
 namespace CortexPE\utils;
 
 use CortexPE\block\Rail;
-use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
 
 /**
  * The helper class for rail
@@ -75,16 +75,16 @@ class Orientation {
 	public static function getMetadata(): array{
 		$railMetadata = [];
 
-		$railMetadata[] = new Orientation(0, self::STRAIGHT, Vector3::SIDE_NORTH, Vector3::SIDE_SOUTH, null);
-		$railMetadata[] = new Orientation(1, self::STRAIGHT, Vector3::SIDE_EAST, Vector3::SIDE_WEST, null);
-		$railMetadata[] = new Orientation(2, self::ASCENDING, Vector3::SIDE_EAST, Vector3::SIDE_WEST, Vector3::SIDE_EAST);
-		$railMetadata[] = new Orientation(3, self::ASCENDING, Vector3::SIDE_EAST, Vector3::SIDE_WEST, Vector3::SIDE_WEST);
-		$railMetadata[] = new Orientation(4, self::ASCENDING, Vector3::SIDE_NORTH, Vector3::SIDE_SOUTH, Vector3::SIDE_NORTH);
-		$railMetadata[] = new Orientation(5, self::ASCENDING, Vector3::SIDE_NORTH, Vector3::SIDE_SOUTH, Vector3::SIDE_SOUTH);
-		$railMetadata[] = new Orientation(6, self::CURVED, Vector3::SIDE_SOUTH, Vector3::SIDE_EAST, null);
-		$railMetadata[] = new Orientation(7, self::CURVED, Vector3::SIDE_SOUTH, Vector3::SIDE_WEST, null);
-		$railMetadata[] = new Orientation(8, self::CURVED, Vector3::SIDE_NORTH, Vector3::SIDE_WEST, null);
-		$railMetadata[] = new Orientation(9, self::CURVED, Vector3::SIDE_NORTH, Vector3::SIDE_EAST, null);
+		$railMetadata[] = new Orientation(0, self::STRAIGHT, Facing::NORTH, Facing::SOUTH, null);
+		$railMetadata[] = new Orientation(1, self::STRAIGHT, Facing::EAST, Facing::WEST, null);
+		$railMetadata[] = new Orientation(2, self::ASCENDING, Facing::EAST, Facing::WEST, Facing::EAST);
+		$railMetadata[] = new Orientation(3, self::ASCENDING, Facing::EAST, Facing::WEST, Facing::WEST);
+		$railMetadata[] = new Orientation(4, self::ASCENDING, Facing::NORTH, Facing::SOUTH, Facing::NORTH);
+		$railMetadata[] = new Orientation(5, self::ASCENDING, Facing::NORTH, Facing::SOUTH, Facing::SOUTH);
+		$railMetadata[] = new Orientation(6, self::CURVED, Facing::SOUTH, Facing::EAST, null);
+		$railMetadata[] = new Orientation(7, self::CURVED, Facing::SOUTH, Facing::WEST, null);
+		$railMetadata[] = new Orientation(8, self::CURVED, Facing::NORTH, Facing::WEST, null);
+		$railMetadata[] = new Orientation(9, self::CURVED, Facing::NORTH, Facing::EAST, null);
 
 		return $railMetadata;
 	}
@@ -112,11 +112,11 @@ class Orientation {
 	 */
 	public static function getNormalRail(int $face): Orientation{
 		switch($face){
-			case Vector3::SIDE_NORTH:
-			case Vector3::SIDE_SOUTH:
+			case Facing::NORTH:
+			case Facing::SOUTH:
 				return Rail::$railMetadata[Rail::STRAIGHT_NORTH_SOUTH];
-			case Vector3::SIDE_EAST:
-			case Vector3::SIDE_WEST:
+			case Facing::EAST:
+			case Facing::WEST:
 				return Rail::$railMetadata[Rail::STRAIGHT_EAST_WEST];
 		}
 
@@ -131,13 +131,13 @@ class Orientation {
 	 */
 	public static function getAscendingData(int $face): Orientation{
 		switch($face){
-			case Vector3::SIDE_NORTH:
+			case Facing::NORTH:
 				return Rail::$railMetadata[Rail::ASCENDING_NORTH];
-			case Vector3::SIDE_SOUTH:
+			case Facing::SOUTH:
 				return Rail::$railMetadata[Rail::ASCENDING_SOUTH];
-			case Vector3::SIDE_EAST:
+			case Facing::EAST:
 				return Rail::$railMetadata[Rail::ASCENDING_EAST];
-			case Vector3::SIDE_WEST:
+			case Facing::WEST:
 				return Rail::$railMetadata[Rail::ASCENDING_WEST];
 		}
 

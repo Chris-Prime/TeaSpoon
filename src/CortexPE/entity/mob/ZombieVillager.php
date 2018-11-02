@@ -36,6 +36,7 @@ declare(strict_types = 1);
 namespace CortexPE\entity\mob;
 
 use pocketmine\entity\Zombie;
+use pocketmine\nbt\tag\CompoundTag;
 
 class ZombieVillager extends Zombie {
 
@@ -48,8 +49,8 @@ class ZombieVillager extends Zombie {
 		return "Zombie Villager";
 	}
 
-	public function initEntity(): void{
+	public function initEntity(CompoundTag $nbt): void{
 		$this->setMaxHealth(20);
-		parent::initEntity();
+		parent::initEntity($nbt);
 	}
 }

@@ -48,6 +48,7 @@ use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\network\mcpe\protocol\MobArmorEquipmentPacket;
 use pocketmine\network\mcpe\protocol\MobEquipmentPacket;
 use pocketmine\Player;
+use pocketmine\nbt\tag\CompoundTag;
 
 class ArmorStand extends Entity {
 
@@ -72,7 +73,9 @@ class ArmorStand extends Entity {
 	/** @var Item */
 	protected $boots;
 
-	public function initEntity(): void{
+	public $namedtag;
+
+	public function initEntity(CompoundTag $nbt): void{
 		$air = Item::get(Item::AIR)->nbtSerialize();
 		if(!$this->namedtag->hasTag(self::TAG_HAND_ITEMS, ListTag::class)){
 			$this->namedtag->setTag(new ListTag(self::TAG_HAND_ITEMS, [
@@ -104,7 +107,7 @@ class ArmorStand extends Entity {
 		$this->setHealth(6);
 		$this->setMaxHealth(6);
 
-		parent::initEntity();
+		parent::initEntity($nbt);
 	}
 
 	public function canCollideWith(Entity $entity): bool{
@@ -320,18 +323,19 @@ class ArmorStand extends Entity {
 		$this->sendHandItems($player);
 	}
 
-	public function saveNBT(): void{
-		parent::saveNBT();
-		$this->namedtag->setTag(new ListTag(self::TAG_ARMOR_ITEMS, [
+	public function saveNBT(): CompoundTag {
+		$nbt = parent::saveNBT();
+		$nbt->setTag(new ListTag(self::TAG_ARMOR_ITEMS, [
 			$this->boots->nbtSerialize(),
 			$this->leggings->nbtSerialize(),
 			$this->chestplate->nbtSerialize(),
 			$this->helmet->nbtSerialize(),
 		], NBT::TAG_Compound));
-		$this->namedtag->setTag(new ListTag(self::TAG_HAND_ITEMS, [
+		$nbt->setTag(new ListTag(self::TAG_HAND_ITEMS, [
 			$this->getItemInHand()->nbtSerialize(),
 			$this->getItemOffHand()->nbtSerialize(),
 		], NBT::TAG_Compound));
+		return $nbt;
 	}
 
 	// A E S T H E T I C S  --  from Altay

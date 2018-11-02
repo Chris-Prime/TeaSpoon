@@ -179,8 +179,7 @@ class BrewingManager extends CraftingManager {
 		$this->registerBrewingRecipe(new BrewingRecipe(Item::get(Item::SPLASH_POTION, Potion::LONG_INVISIBILITY, 1), Item::get(Item::FERMENTED_SPIDER_EYE, 0, 1), Item::get(Item::SPLASH_POTION, Potion::LONG_NIGHT_VISION, 1)));
 		//===================================================================分隔符=======================================================================
 		//普通药水升级成喷溅
-		$ref = new \ReflectionClass(Potion::class);
-		$potions = array_diff_assoc($ref->getConstants(), $ref->getParentClass()->getConstants());
+		$potions = Potion::ALL;
 		foreach($potions as $potion){
 			$this->registerBrewingRecipe(new BrewingRecipe(Item::get(Item::SPLASH_POTION, $potion, 1), Item::get(Item::GUNPOWDER, 0, 1), Item::get(Item::POTION, $potion, 1)));
 			$this->registerBrewingRecipe(new BrewingRecipe(Item::get(Item::LINGERING_POTION, $potion, 1), Item::get(Item::DRAGON_BREATH, 0, 1), Item::get(Item::SPLASH_POTION, $potion, 1)));

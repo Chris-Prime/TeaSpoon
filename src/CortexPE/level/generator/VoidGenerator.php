@@ -37,18 +37,9 @@ class VoidGenerator extends Generator {
 	protected $random;
 	/** @var Chunk */
 	private $chunk;
-	private $options;
+	protected $options;
 	/** @var Chunk */
 	private $emptyChunk = null;
-
-	/**
-	 * Void constructor.
-	 *
-	 * @param array $settings
-	 */
-	public function __construct(array $settings = []){
-		$this->options = $settings;
-	}
 
 	/**
 	 * @return array

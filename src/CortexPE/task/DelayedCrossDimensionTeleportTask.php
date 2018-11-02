@@ -76,7 +76,9 @@ class DelayedCrossDimensionTeleportTask extends Task {
 		$pk->position = $this->position;
 		$pk->respawn = $this->respawn;
 		$this->player->dataPacket($pk);
-		$this->player->sendPlayStatus(PlayStatusPacket::PLAYER_SPAWN);
+		$pk = new PlayStatusPacket();
+		$pk->status = PlayStatusPacket::PLAYER_SPAWN;
+		$this->player->dataPacket($pk);
 		$this->player->teleport($this->position);
 
 		unset(Main::$onPortal[$this->player->getId()]);

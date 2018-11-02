@@ -51,18 +51,27 @@ class Bat extends Animal {
 	public $height = 0.9;
 	protected $age = 0;
 
-	public function initEntity(): void{
-		if(!$this->namedtag->hasTag(self::TAG_IS_RESTING, ByteTag::class)){
-			$this->namedtag->setByte(self::TAG_IS_RESTING, 0);
+	protected $isResting = false;
+
+	public function initEntity(CompoundTag $nbt): void{
+		if(!$nbt->hasTag(self::TAG_IS_RESTING, ByteTag::class)){
+			$nbt->setByte(self::TAG_IS_RESTING, 0);
 		}
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RESTING, boolval($this->namedtag->getByte(self::TAG_IS_RESTING)));
+		$this->isResting = boolval($nbt->getByte(self::TAG_IS_RESTING));
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RESTING, $this->isResting);
 		$this->setMaxHealth(6);
 
-		parent::initEntity();
+		parent::initEntity($nbt);
+	}
+
+	public function saveNBT() : CompoundTag{
+		$nbt = parent::saveNBT();
+		$nbt->setByte(self::TAG_IS_RESTING, intval($resting));
+		return $nbt;
 	}
 
 	public function isResting(): bool{
-		return boolval($this->namedtag->getByte(self::TAG_IS_RESTING));
+		return $this->isResting;
 	}
 
 	public function getName(): string{
@@ -70,7 +79,10 @@ class Bat extends Animal {
 	}
 
 	public function setResting(bool $resting){
-		$this->namedtag->setByte(self::TAG_IS_RESTING, intval($resting));
+		if($this->isResting !== $resting) {
+			$this->isResting = $resting;
+			$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RESTING, $this->isResting);
+		}
 	}
 
 	public function onUpdate(int $currentTick): bool{

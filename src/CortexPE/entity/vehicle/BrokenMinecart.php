@@ -39,8 +39,9 @@ use pocketmine\block\Rail;
 use pocketmine\item\Item;
 use pocketmine\math\Math;
 use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
 use pocketmine\Player;
-
+use pocketmine\nbt\tag\CompoundTag;
 
 /**
  * A request for dummy and crappy minecart
@@ -73,14 +74,14 @@ class BrokenMinecart extends Vehicle {
 	private $direction = -1;
 	private $moveVector = [];
 
-	public function initEntity(): void{
+	public function initEntity(CompoundTag $nbt): void{
 		$this->setMaxHealth(1);
 		$this->setHealth($this->getMaxHealth());
-		$this->moveVector[Vector3::SIDE_NORTH] = new Vector3(-1, 0, 0);
-		$this->moveVector[Vector3::SIDE_SOUTH] = new Vector3(1, 0, 0);
-		$this->moveVector[Vector3::SIDE_EAST] = new Vector3(0, 0, -1);
-		$this->moveVector[Vector3::SIDE_WEST] = new Vector3(0, 0, 1);
-		parent::initEntity();
+		$this->moveVector[Facing::NORTH] = new Vector3(-1, 0, 0);
+		$this->moveVector[Facing::SOUTH] = new Vector3(1, 0, 0);
+		$this->moveVector[Facing::EAST] = new Vector3(0, 0, -1);
+		$this->moveVector[Facing::WEST] = new Vector3(0, 0, 1);
+		parent::initEntity($nbt);
 	}
 
 	public function getName(): string{
@@ -221,8 +222,8 @@ class BrokenMinecart extends Vehicle {
 			case Orientation::ASCENDING_NORTH:
 			case Orientation::ASCENDING_SOUTH:
 				switch($candidateDirection){
-					case Vector3::SIDE_NORTH:
-					case Vector3::SIDE_SOUTH:
+					case Facing::NORTH:
+					case Facing::SOUTH:
 						return $candidateDirection;
 				}
 				break;
@@ -230,53 +231,53 @@ class BrokenMinecart extends Vehicle {
 			case Orientation::ASCENDING_EAST:
 			case Orientation::ASCENDING_WEST:
 				switch($candidateDirection){
-					case Vector3::SIDE_WEST:
-					case Vector3::SIDE_EAST:
+					case Facing::WEST:
+					case Facing::EAST:
 						return $candidateDirection;
 				}
 				break;
 			case Orientation::CURVED_SOUTH_EAST:
 				switch($candidateDirection){
-					case Vector3::SIDE_SOUTH:
-					case Vector3::SIDE_EAST:
+					case Facing::SOUTH:
+					case Facing::EAST:
 						return $candidateDirection;
-					case Vector3::SIDE_NORTH:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_EAST);
-					case Vector3::SIDE_WEST:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_SOUTH);
+					case Facing::NORTH:
+						return $this->checkForTurn($candidateDirection, Facing::EAST);
+					case Facing::WEST:
+						return $this->checkForTurn($candidateDirection, Facing::SOUTH);
 				}
 				break;
 			case Orientation::CURVED_SOUTH_WEST:
 				switch($candidateDirection){
-					case Vector3::SIDE_SOUTH:
-					case Vector3::SIDE_WEST:
+					case Facing::SOUTH:
+					case Facing::WEST:
 						return $candidateDirection;
-					case Vector3::SIDE_NORTH:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_WEST);
-					case Vector3::SIDE_EAST:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_SOUTH);
+					case Facing::NORTH:
+						return $this->checkForTurn($candidateDirection, Facing::WEST);
+					case Facing::EAST:
+						return $this->checkForTurn($candidateDirection, Facing::SOUTH);
 				}
 				break;
 			case Orientation::CURVED_NORTH_WEST:
 				switch($candidateDirection){
-					case Vector3::SIDE_NORTH:
-					case Vector3::SIDE_WEST:
+					case Facing::NORTH:
+					case Facing::WEST:
 						return $candidateDirection;
-					case Vector3::SIDE_SOUTH:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_WEST);
-					case Vector3::SIDE_EAST:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_NORTH);
+					case Facing::SOUTH:
+						return $this->checkForTurn($candidateDirection, Facing::WEST);
+					case Facing::EAST:
+						return $this->checkForTurn($candidateDirection, Facing::NORTH);
 				}
 				break;
 			case Orientation::CURVED_NORTH_EAST:
 				switch($candidateDirection){
-					case Vector3::SIDE_NORTH:
-					case Vector3::SIDE_EAST:
+					case Facing::NORTH:
+					case Facing::EAST:
 						return $candidateDirection;
-					case Vector3::SIDE_SOUTH:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_EAST);
-					case Vector3::SIDE_WEST:
-						return $this->checkForTurn($candidateDirection, Vector3::SIDE_NORTH);
+					case Facing::SOUTH:
+						return $this->checkForTurn($candidateDirection, Facing::EAST);
+					case Facing::WEST:
+						return $this->checkForTurn($candidateDirection, Facing::NORTH);
 				}
 				break;
 		}
@@ -295,7 +296,7 @@ class BrokenMinecart extends Vehicle {
 	 */
 	private function checkForTurn($currentDirection, $newDirection){
 		switch($currentDirection){
-			case Vector3::SIDE_NORTH:
+			case Facing::NORTH:
 				$diff = $this->x - $this->getFloorX();
 				if($diff !== 0 and $diff <= .5){
 					$dx = ($this->getFloorX() + .5) - $this->x;
@@ -304,7 +305,7 @@ class BrokenMinecart extends Vehicle {
 					return $newDirection;
 				}
 				break;
-			case Vector3::SIDE_SOUTH:
+			case Facing::SOUTH:
 				$diff = $this->x - $this->getFloorX();
 				if($diff !== 0 and $diff >= .5){
 					$dx = ($this->getFloorX() + .5) - $this->x;
@@ -313,7 +314,7 @@ class BrokenMinecart extends Vehicle {
 					return $newDirection;
 				}
 				break;
-			case Vector3::SIDE_EAST:
+			case Facing::EAST:
 				$diff = $this->z - $this->getFloorZ();
 				if($diff !== 0 and $diff <= .5){
 					$dz = ($this->getFloorZ() + .5) - $this->z;
@@ -322,7 +323,7 @@ class BrokenMinecart extends Vehicle {
 					return $newDirection;
 				}
 				break;
-			case Vector3::SIDE_WEST:
+			case Facing::WEST:
 				$diff = $this->z - $this->getFloorZ();
 				if($diff !== 0 and $diff >= .5){
 					$dz = $dz = ($this->getFloorZ() + .5) - $this->z;
@@ -340,7 +341,7 @@ class BrokenMinecart extends Vehicle {
 		switch($railType){
 			case Orientation::ASCENDING_NORTH:
 				switch($currentDirection){
-					case Vector3::SIDE_NORTH:
+					case Facing::NORTH:
 						// Headed north up
 						$diff = $this->x - $this->getFloorX();
 						if($diff !== 0 and $diff <= .5){
@@ -350,7 +351,7 @@ class BrokenMinecart extends Vehicle {
 							return true;
 						}
 						break;
-					case Vector3::SIDE_SOUTH:
+					case Facing::SOUTH:
 						// Headed south down
 						$diff = $this->x - $this->getFloorX();
 						if($diff !== 0 and $diff >= .5){
@@ -364,7 +365,7 @@ class BrokenMinecart extends Vehicle {
 				break;
 			case Orientation::ASCENDING_SOUTH:
 				switch($currentDirection){
-					case Vector3::SIDE_SOUTH:
+					case Facing::SOUTH:
 						// Headed south up
 						$diff = $this->x - $this->getFloorX();
 						if($diff !== 0 and $diff >= .5){
@@ -374,7 +375,7 @@ class BrokenMinecart extends Vehicle {
 							return true;
 						}
 						break;
-					case Vector3::SIDE_NORTH:
+					case Facing::NORTH:
 						// Headed north down
 						$diff = $this->x - $this->getFloorX();
 						if($diff !== 0 and $diff <= .5){
@@ -388,7 +389,7 @@ class BrokenMinecart extends Vehicle {
 				break;
 			case Orientation::ASCENDING_EAST:
 				switch($currentDirection){
-					case Vector3::SIDE_EAST:
+					case Facing::EAST:
 						// Headed east up
 						$diff = $this->z - $this->getFloorZ();
 						if($diff !== 0 and $diff <= .5){
@@ -398,7 +399,7 @@ class BrokenMinecart extends Vehicle {
 							return true;
 						}
 						break;
-					case Vector3::SIDE_WEST:
+					case Facing::WEST:
 						// Headed west down
 						$diff = $this->z - $this->getFloorZ();
 						if($diff !== 0 and $diff >= .5){
@@ -412,7 +413,7 @@ class BrokenMinecart extends Vehicle {
 				break;
 			case Orientation::ASCENDING_WEST:
 				switch($currentDirection){
-					case Vector3::SIDE_WEST:
+					case Facing::WEST:
 						// Headed west up
 						$diff = $this->z - $this->getFloorZ();
 						if($diff !== 0 and $diff >= .5){
@@ -422,7 +423,7 @@ class BrokenMinecart extends Vehicle {
 							return true;
 						}
 						break;
-					case Vector3::SIDE_EAST:
+					case Facing::EAST:
 						// Headed east down
 						$diff = $this->z - $this->getFloorZ();
 						if($diff !== 0 and $diff <= .5){

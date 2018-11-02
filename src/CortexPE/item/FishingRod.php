@@ -78,7 +78,7 @@ class FishingRod extends Durable {
 					}
 
 					if($projectile instanceof Projectile){
-						$player->getServer()->getPluginManager()->callEvent($projectileEv = new ProjectileLaunchEvent($projectile));
+						($projectileEv = new ProjectileLaunchEvent($projectile))->call();
 						if($projectileEv->isCancelled()){
 							$projectile->flagForDespawn();
 						}else{

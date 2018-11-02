@@ -266,7 +266,7 @@ class EventListener implements Listener {
 			// MCPE(BE) does this client-side... we just have to do the same server-side.
 			$item = clone $ev->getItem();
 			$player = $ev->getPlayer();
-			$check = ($ev->getAction() == PlayerInteractEvent::RIGHT_CLICK_BLOCK || $ev->getAction() == PlayerInteractEvent::RIGHT_CLICK_AIR);
+			$check = ($ev->getAction() == PlayerInteractEvent::RIGHT_CLICK_BLOCK);
 			$isBlocked = (in_array($ev->getBlock()->getId(), [
 				Block::ITEM_FRAME_BLOCK,
 			]));
@@ -372,7 +372,9 @@ class EventListener implements Listener {
 					$pk->position = $to;
 					$pk->respawn = false;
 					$p->sendDataPacket($pk);
-					$p->sendPlayStatus(PlayStatusPacket::PLAYER_SPAWN);
+					$pk = new PlayStatusPacket();
+					$pk->status = PlayStatusPacket::PLAYER_SPAWN;
+					$p->dataPacket($pk);
 				}
 			}
 		}

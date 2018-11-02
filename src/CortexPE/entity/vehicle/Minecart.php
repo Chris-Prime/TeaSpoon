@@ -46,6 +46,7 @@ use pocketmine\item\Item;
 use pocketmine\level\particle\SmokeParticle;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 
 /**
@@ -92,8 +93,11 @@ class Minecart extends Vehicle {
 	/** @var float */
 	private $currentSpeed = 0;
 
-	public function initEntity(): void{
-		parent::initEntity();
+	public $namedtag;
+
+	public function initEntity(CompoundTag $nbt): void{
+		$this->namedtag = $nbt;
+		parent::initEntity($nbt);
 
 		// Now with the custom block data
 		if($this->namedtag->hasTag("CustomDisplayTile", ByteTag::class)
@@ -130,7 +134,13 @@ class Minecart extends Vehicle {
 	public function saveNBT(): void{
 		$this->saveEntityData();
 
-		parent::saveNBT();
+		$nbt = parent::saveNBT();
+
+		$nbt->setByte("CustomDisplayTile", $this->namedtag->getByte("CustomDisplayTile"));
+		$nbt->setInt("DisplayTile", $this->namedtag->getInt("DisplayTile"));
+		$nbt->setInt("DisplayOffset", $this->namedtag->getInt("DisplayOffset"));
+
+		return $nbt;
 	}
 
 	private function saveEntityData(){

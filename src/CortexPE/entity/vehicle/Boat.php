@@ -25,7 +25,7 @@ use pocketmine\entity\Vehicle;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\nbt\tag\{
-	ByteTag
+	ByteTag, CompoundTag
 };
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
 use pocketmine\Server as PMServer;
@@ -45,13 +45,14 @@ class Boat extends Vehicle {
 	public $linkedEntity = null;
 	protected $age = 0;
 
-	public function initEntity(): void{
+	public function initEntity(CompoundTag $nbt): void{
+		$this->namedtag = $nbt;
 		if(!$this->namedtag->hasTag(self::TAG_WOOD_ID, ByteTag::class)){
 			$this->namedtag->setByte(self::TAG_WOOD_ID, 0);
 		}
 		$this->setMaxHealth(4);
 
-		parent::initEntity();
+		parent::initEntity($this->namedtag);
 	}
 
 	public function getDrops(): array{

@@ -31,6 +31,7 @@ use pocketmine\math\AxisAlignedBB;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ShortTag;
+use pocketmine\nbt\tag\CompoundTag;
 
 class AreaEffectCloud extends Entity {
 
@@ -62,9 +63,11 @@ class AreaEffectCloud extends Entity {
 	private $Duration = 600;
 	private $DurationOnUse = 0;
 	protected $age = 0;
+	public $namedtag = null;
 
-	public function initEntity(): void{
-		parent::initEntity();
+	public function initEntity(CompoundTag $nbt): void{
+		parent::initEntity($nbt);
+		$this->namedtag = $nbt;
 
 		if(!$this->namedtag->hasTag(self::TAG_POTION_ID, ShortTag::class)){
 			$this->namedtag->setShort(self::TAG_POTION_ID, $this->PotionId);
@@ -122,6 +125,21 @@ class AreaEffectCloud extends Entity {
 		$this->getDataPropertyManager()->setFloat(self::DATA_BOUNDING_BOX_HEIGHT, 1);
 		$this->getDataPropertyManager()->setFloat(self::DATA_BOUNDING_BOX_WIDTH, $this->Radius * 2);
 		$this->getDataPropertyManager()->setByte(self::DATA_POTION_AMBIENT, 1);
+	}
+
+	public function saveNBT() : CompoundTag {
+		$nbt = parent::saveNBT();
+		$nbt->setShort(self::TAG_POTION_ID, $this->PotionId);
+		$nbt->setFloat(self::TAG_RADIUS, $this->Radius);
+		$nbt->setFloat(self::TAG_RADIUS_ON_USE, $this->RadiusOnUse);
+		$nbt->setFloat(self::TAG_RADIUS_PER_TICK, $this->RadiusPerTick);
+		$nbt->setInt(self::TAG_WAIT_TIME, $this->WaitTime);
+		$nbt->setInt(self::TAG_TILE_X, intval(round($this->getX())));
+		$nbt->setInt(self::TAG_TILE_Y, intval(round($this->getY())));
+		$nbt->setInt(self::TAG_TILE_Z, intval(round($this->getZ())));
+		$nbt->setInt(self::TAG_DURATION, $this->Duration);
+		$nbt->setInt(self::TAG_DURATION_ON_USE, $this->DurationOnUse);
+		return $nbt;
 	}
 
 	public function entityBaseTick(int $tickDiff = 1): bool{

@@ -31,14 +31,17 @@ class LingeringPotion extends Throwable {
 	protected $gravity = 0.1;
 	protected $drag = 0.05;
 
-	public function initEntity(): void{
+	public $namedtag;
+
+	public function initEntity(CompoundTag $nbt): void{
+		$this->namedtag = $nbt;
 		if(!$this->namedtag->hasTag(self::TAG_POTION_ID, ShortTag::class)){
 			$this->namedtag->setShort(self::TAG_POTION_ID, Potion::AWKWARD);
 		}
 		$this->getDataPropertyManager()->setShort(self::DATA_VARIANT, $this->getPotionId());
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_LINGER);
 
-		parent::initEntity();
+		parent::initEntity($this->namedtag);
 	}
 
 	public function getPotionId(){

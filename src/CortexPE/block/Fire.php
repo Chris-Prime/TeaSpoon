@@ -42,21 +42,22 @@ use pocketmine\block\{
 	Block, BlockFactory, Fire as PMFire
 };
 use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
 
 class Fire extends PMFire {
 
 	public function onScheduledUpdate(): void{
-		if($this->meta >= 15){
+		if($this->variant >= 15){
 			$this->level->setBlock($this, BlockFactory::get(Block::AIR));
 		}else{
-			$this->meta += mt_rand(1, 4);
+			$this->variant += mt_rand(1, 4);
 			$this->level->setBlock($this, $this);
 		}
 	}
 
 	public function onRandomTick(): void{
 		$weather = Main::$weatherData[$this->getLevel()->getId()];
-		$forever = ($this->getSide(Vector3::SIDE_DOWN)->getId() == Block::NETHERRACK);
+		$forever = ($this->getSide(Facing::DOWN)->getId() == Block::NETHERRACK);
 		if(!$forever){
 			if($weather->canCalculate()){
 				$rainy = ($weather->isRainy() || $weather->isRainyThunder());
@@ -64,10 +65,10 @@ class Fire extends PMFire {
 				if($rainy &&
 					(
 						Utils::canSeeSky($this->getLevel(), $this->asVector3()) ||
-						Utils::canSeeSky($this->getLevel(), $this->getSide(Vector3::SIDE_NORTH)) ||
-						Utils::canSeeSky($this->getLevel(), $this->getSide(Vector3::SIDE_SOUTH)) ||
-						Utils::canSeeSky($this->getLevel(), $this->getSide(Vector3::SIDE_EAST)) ||
-						Utils::canSeeSky($this->getLevel(), $this->getSide(Vector3::SIDE_WEST))
+						Utils::canSeeSky($this->getLevel(), $this->getSide(Facing::NORTH)) ||
+						Utils::canSeeSky($this->getLevel(), $this->getSide(Facing::SOUTH)) ||
+						Utils::canSeeSky($this->getLevel(), $this->getSide(Facing::EAST)) ||
+						Utils::canSeeSky($this->getLevel(), $this->getSide(Facing::WEST))
 					)
 				){
 					$this->level->setBlock($this, BlockFactory::get(Block::AIR));

@@ -46,7 +46,11 @@ class Anvil extends PMAnvil {
 	public function onActivate(Item $item, Player $player = null): bool{
 		if(Main::$AnvilEnabled){
 			if($player instanceof Player){
-				$player->addWindow(new AnvilInventory($this), WindowTypes::ANVIL);
+				try {
+					$player->addWindow(new AnvilInventory($this), WindowTypes::ANVIL);
+				} catch (\InvalidArgumentException $e) {
+					# Server is lagging, and player is spamming the anvil = crash
+				}
 			}
 		}
 

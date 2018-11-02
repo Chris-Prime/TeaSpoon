@@ -39,6 +39,7 @@ use pocketmine\block\Block;
 use pocketmine\block\Rail as PMRail;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
 use pocketmine\Player;
 
 /**
@@ -78,7 +79,7 @@ class Rail extends PMRail {
 	}
 
 	public function place(Item $item, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, Player $player = null): bool{
-		$down = $this->getSide(Vector3::SIDE_DOWN);
+		$down = $this->getSide(Facing::DOWN);
 		if(is_null($down) || $down->isTransparent()){
 			return false;
 		}
@@ -99,14 +100,14 @@ class Rail extends PMRail {
 		}elseif($railSides === 4){
 			// Multiple intersect 4-rails within railway
 			if($this->canBeCurved()){
-				$railSouth = $railsAround[Vector3::SIDE_SOUTH];
-				$railEast = $railsAround[Vector3::SIDE_EAST];
-				$damage = $this->connectMultiples($railSouth, Vector3::SIDE_SOUTH, $railEast, Vector3::SIDE_EAST);
+				$railSouth = $railsAround[Facing::SOUTH];
+				$railEast = $railsAround[Facing::EAST];
+				$damage = $this->connectMultiples($railSouth, Facing::SOUTH, $railEast, Facing::EAST);
 				$this->setDamage($damage->getDamage());
 			}else{
-				$railSouth = $railsAround[Vector3::SIDE_EAST];
-				$railEast = $railsAround[Vector3::SIDE_WEST];
-				$damage = $this->connectMultiples($railSouth, Vector3::SIDE_EAST, $railEast, Vector3::SIDE_WEST);
+				$railSouth = $railsAround[Facing::EAST];
+				$railEast = $railsAround[Facing::WEST];
+				$damage = $this->connectMultiples($railSouth, Facing::EAST, $railEast, Facing::WEST);
 				$this->setDamage($damage->getDamage());
 			}
 		}elseif($railSides !== 0){
@@ -164,7 +165,7 @@ class Rail extends PMRail {
 	 */
 	private function checkRailsAroundAffected(): array{
 		$array = [];
-		$sides = [Vector3::SIDE_NORTH, Vector3::SIDE_SOUTH, Vector3::SIDE_WEST, Vector3::SIDE_EAST];
+		$sides = [Facing::NORTH, Facing::SOUTH, Facing::WEST, Facing::EAST];
 		$railsAround = $this->checkRailsAround($sides);
 		foreach($railsAround as $side => $rail){
 			if(count($rail->checkRailsConnected()) != 2){
@@ -183,8 +184,8 @@ class Rail extends PMRail {
 		$result = [];
 		foreach($faces as $side){
 			$block = $this->getSide($side);
-			$up = $block->getSide(Vector3::SIDE_UP);
-			$down = $block->getSide(Vector3::SIDE_DOWN);
+			$up = $block->getSide(Facing::UP);
+			$down = $block->getSide(Facing::DOWN);
 			if($up instanceof Rail){
 				$result[$side] = $up;
 			}
@@ -249,7 +250,7 @@ class Rail extends PMRail {
 					}
 
 					return $delta === -1 ? Orientation::getAscendingData($face) : Orientation::getNormalRail($face);
-				}elseif($other->getOrientation()->hasConnectingDirections(Vector3::SIDE_NORTH, Vector3::SIDE_NORTH)){
+				}elseif($other->getOrientation()->hasConnectingDirections(Facing::NORTH, Facing::NORTH)){
 					$other->setOrientation($delta === 1 ? Orientation::getAscendingData(Vector3::getOppositeSide($face)) : Orientation::getNormalRail($face));
 
 					return $delta === -1 ? Orientation::getAscendingData($face) : Orientation::getNormalRail($face);

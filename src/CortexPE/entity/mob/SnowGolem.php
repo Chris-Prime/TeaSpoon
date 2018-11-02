@@ -47,6 +47,7 @@ use pocketmine\item\Shears;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\Player;
+use pocketmine\nbt\tag\CompoundTag;
 
 class SnowGolem extends Monster {
 
@@ -54,12 +55,14 @@ class SnowGolem extends Monster {
 	public const TAG_PUMPKIN = "Pumpkin";
 	public $width = 0.7;
 	public $height = 1.9;
+	public $namedtag = null;
 
 	public function getName(): string{
 		return "Snow Golem";
 	}
 
-	public function initEntity(): void{
+	public function initEntity(CompoundTag $nbt): void{
+		$this->namedtag = $nbt;
 		if(!$this->namedtag->hasTag(self::TAG_PUMPKIN, ByteTag::class)){
 			$this->namedtag->setByte(self::TAG_PUMPKIN, 1);
 		}
@@ -67,7 +70,13 @@ class SnowGolem extends Monster {
 		$this->setMaxHealth(4);
 		$this->setHealth(4);
 
-		parent::initEntity();
+		parent::initEntity($this->namedtag);
+	}
+
+	public function saveNBT() : CompoundTag {
+		$nbt = parent::saveNBT();
+		$nbt->setByte(self::TAG_PUMPKIN, $this->isWearingPumpkin() ? 1 : 0);
+		return $nbt;
 	}
 
 	public function onInteract(Player $player, Item $item, int $slot, Vector3 $clickPos): bool{

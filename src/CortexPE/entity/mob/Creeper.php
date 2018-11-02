@@ -42,6 +42,7 @@ use pocketmine\level\Explosion;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\ShortTag;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 
 class Creeper extends Monster {
@@ -54,8 +55,11 @@ class Creeper extends Monster {
 	public $height = 1.7;
 	public $width = 0.6;
 
-	public function initEntity(): void{
-		parent::initEntity();
+	public $namedtag;
+
+	public function initEntity(CompoundTag $nbt): void{
+		parent::initEntity($nbt);
+		$this->namedtag = $nbt;
 
 		if(!$this->namedtag->hasTag(self::TAG_POWERED, ByteTag::class)){
 			$this->namedtag->setByte(self::TAG_POWERED, 0);
@@ -75,6 +79,17 @@ class Creeper extends Monster {
 		if(!$this->namedtag->hasTag(self::TAG_IGNITED, ByteTag::class)){
 			$this->namedtag->setByte(self::TAG_IGNITED, 0);
 		}
+	}
+
+	public function saveNBT() : CompoundTag {
+		$nbt = parent::saveNBT();
+		
+		$nbt->setByte(self::TAG_POWERED, $this->namedtag->getByte(self::TAG_POWERED));
+		$nbt->setByte(self::TAG_EXPLOSION_RADIUS, $this->namedtag->getByte(self::TAG_EXPLOSION_RADIUS));
+		$nbt->setShort(self::TAG_FUSE, $nbt->getShort($this->namedtag->getShort(self::TAG_FUSE)));
+		$nbt->setByte(self::TAG_IGNITED, $nbt->getByte($this->namedtag->getByte(self::TAG_IGNITED)));
+
+		return $this->namedtag;
 	}
 
 	public function entityBaseTick(int $tickDiff = 1): bool{

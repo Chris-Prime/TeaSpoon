@@ -102,8 +102,8 @@ abstract class Vehicle extends PMVehicle {
 		return $this->linkedEntity == null && $this->canInteract;
 	}
 
-	public function initEntity(): void{
-		parent::initEntity();
+	public function initEntity(CompoundTag $nbt): void{
+		parent::initEntity($nbt);
 
 		$this->setRollingAmplitude(0);
 		$this->setDamage(0);

@@ -51,10 +51,10 @@ class ItemManager {
 		ItemFactory::registerItem(new ChorusFruit(), true);
 		ItemFactory::registerItem(new FishingRod(), true);
 		ItemFactory::registerItem(new EyeOfEnder(), true);
-		ItemFactory::registerItem(new SpawnEgg(), true);
+		ItemFactory::registerItem(new SpawnEgg(SpawnEgg::SPAWN_EGG), true);
 		ItemFactory::registerItem(new Bow(), true);
 		ItemFactory::registerItem(new EndCrystal(), true);
-		ItemFactory::registerItem(new Bucket(), true);
+		ItemFactory::registerItem(new Bucket(Bucket::BUCKET), true);
 		ItemFactory::registerItem(new ArmorStand(), true);
 		if(Main::$cars){
 			ItemFactory::registerItem(new Minecart(), true);

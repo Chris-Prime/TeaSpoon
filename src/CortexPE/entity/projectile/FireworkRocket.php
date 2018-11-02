@@ -40,6 +40,8 @@ class FireworkRocket extends Projectile {
 	public $fireworks;
 	private $lifeTime = 0;
 
+	public $namedtag;
+
 	public function __construct(Level $level, CompoundTag $nbt, Entity $shootingEntity = null, ?Fireworks $item = null, ?Random $random = null){
 		$this->random = $random;
 		$this->fireworks = $item;
@@ -108,13 +110,14 @@ class FireworkRocket extends Projectile {
 		}
 	}
 
-	protected function initEntity(): void{
-		parent::initEntity();
+	protected function initEntity(CompoundTag $nbt): void{
+		parent::initEntity($nbt);
+		$this->namedtag = $nbt;
 		$random = $this->random ?? new Random();
 		$this->setGenericFlag(self::DATA_FLAG_HAS_COLLISION, true);
 		$this->setGenericFlag(self::DATA_FLAG_AFFECTED_BY_GRAVITY, true);
 		if($this->fireworks instanceof Item){
-			$this->getDataPropertyManager()->setItem(16, Item::get($this->fireworks->getId(), $this->fireworks->getDamage(), $this->fireworks->getCount(), $this->fireworks->getCompoundTag()));
+			$this->getDataPropertyManager()->setItem(16, Item::get($this->fireworks->getId(), $this->fireworks->getDamage(), $this->fireworks->getCount(), $this->fireworks->getNamedTag()));
 		}else{
 			$this->getDataPropertyManager()->setItem(16, Item::get(Item::FIREWORKS));
 		}
@@ -132,4 +135,5 @@ class FireworkRocket extends Projectile {
 		}
 		$this->lifeTime = 20 * $flyTime + $random->nextBoundedInt(5) + $random->nextBoundedInt(7);
 	}
+
 }

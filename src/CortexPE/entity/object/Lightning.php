@@ -76,8 +76,9 @@ class Lightning extends Animal {
 				}else{
 					$v3 = new Vector3($this->x, $this->y, $this->z);
 				}
+				if($v3->y < 0) unset($v3);
 
-				$fire->setDamage(11); // Only one random tick away till a chance of despawn ;)
+				$fire::get($fire->getId(), 11); // Only one random tick away till a chance of despawn ;)
 
 				if(isset($v3)) $this->getLevel()->setBlock($v3, $fire);
 

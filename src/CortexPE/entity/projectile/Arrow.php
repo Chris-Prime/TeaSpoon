@@ -52,13 +52,16 @@ class Arrow extends PMArrow {
 	/** @var Color */
 	protected $color;
 
-	public function initEntity(): void{
+	public $namedtag;
+
+	public function initEntity(CompoundTag $nbt): void{
+		$this->namedtag = $nbt;
 		$this->potionId = $this->namedtag->getShort("Potion", 0);
 		if($this->potionId >= 1 && $this->potionId <= 36){
 			$this->color = Utils::getPotionColor($this->potionId);
 		}
 
-		parent::initEntity();
+		parent::initEntity($this->namedtag);
 	}
 
 	public function onHitEntity(Entity $entityHit, RayTraceResult $hitResult): void{

@@ -44,6 +44,7 @@ use pocketmine\block\{
 };
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
 use pocketmine\nbt\tag\{
 	CompoundTag, ListTag, StringTag
 };
@@ -159,7 +160,7 @@ class ShulkerBox extends Transparent {
 				$nbt->setTag(new ListTag("Items", []));
 				$sb = Tile::createTile(Tile::SHULKER_BOX, $this->getLevel(), $nbt);
 			}
-			if(!($this->getSide(Vector3::SIDE_UP)->isTransparent()) or ($sb->getNBT()->hasTag("Lock", StringTag::class) and $sb->getNBT()->getString("Lock") !== $item->getCustomName())){
+			if(!($this->getSide(Facing::UP)->isTransparent()) or ($sb->getNBT()->hasTag("Lock", StringTag::class) and $sb->getNBT()->getString("Lock") !== $item->getCustomName())){
 				return true;
 			}
 			if($player->isCreative() and Main::$limitedCreative){

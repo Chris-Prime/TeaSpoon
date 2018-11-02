@@ -45,6 +45,7 @@ use pocketmine\inventory\InventoryHolder;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -138,7 +139,7 @@ class Hopper extends Spawnable implements InventoryHolder, Container, Nameable {
 					$itemClone->setCount(1);
 					if($this->inventory->canAddItem($itemClone)){
 						$this->inventory->addItem($itemClone);
-						$item->count--;
+						$item->setCount($item->getCount() - 1);
 						if($item->getCount() <= 0){
 							$entity->flagForDespawn();
 						}
@@ -147,7 +148,7 @@ class Hopper extends Spawnable implements InventoryHolder, Container, Nameable {
 			}
 
 			// suck items from container above it
-			$source = $this->getLevel()->getTile($this->getBlock()->getSide(Vector3::SIDE_UP));
+			$source = $this->getLevel()->getTile($this->getBlock()->getSide(Facing::UP));
 			if($source instanceof Container){ // follow vanilla rules
 				$inventory = $source->getInventory();
 				$firstOccupied = null;
@@ -190,7 +191,7 @@ class Hopper extends Spawnable implements InventoryHolder, Container, Nameable {
 
 			//TODO: Delay it
 			// put items to target
-			if(!($this->getLevel()->getTile($this->getBlock()->getSide(Vector3::SIDE_DOWN)) instanceof Hopper)){ // vanilla way of doing it
+			if(!($this->getLevel()->getTile($this->getBlock()->getSide(Facing::DOWN)) instanceof Hopper)){ // vanilla way of doing it
 				$target = $this->getLevel()->getTile($this->getBlock()->getSide($this->getBlock()->getDamage()));
 				if($target instanceof Container){
 					$inv = $target->getInventory();

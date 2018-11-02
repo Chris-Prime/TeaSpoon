@@ -90,7 +90,7 @@ class Bow extends PMBow {
 				$ev->setCancelled();
 			}
 
-			$player->getServer()->getPluginManager()->callEvent($ev);
+			$ev->call();
 
 			$entity = $ev->getProjectile(); //This might have been changed by plugins
 
@@ -129,7 +129,7 @@ class Bow extends PMBow {
 				}
 
 				if($entity instanceof Projectile){
-					$player->getServer()->getPluginManager()->callEvent($projectileEv = new ProjectileLaunchEvent($entity));
+					($projectileEv = new ProjectileLaunchEvent($entity))->call();
 					if($projectileEv->isCancelled()){
 						$ev->getProjectile()->flagForDespawn();
 					}else{

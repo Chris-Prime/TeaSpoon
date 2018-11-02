@@ -41,6 +41,7 @@ use pocketmine\block\Block;
 use pocketmine\block\BrewingStand as PMBrewingStand;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
@@ -50,7 +51,7 @@ use pocketmine\tile\Tile;
 class BrewingStand extends PMBrewingStand {
 	public function place(Item $item, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, Player $player = \null): bool{
 		$parent = parent::place($item, $blockReplace, $blockClicked, $face, $clickVector, $player);
-		if(!$blockReplace->getSide(Vector3::SIDE_DOWN)->isTransparent()){
+		if(!$blockReplace->getSide(Facing::DOWN)->isTransparent()){
 			// wtf?
 			$nbt = new CompoundTag("", [
 				new StringTag(Tile::TAG_ID, Tile::BREWING_STAND),

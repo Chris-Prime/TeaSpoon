@@ -57,7 +57,7 @@ class Lava extends PMLava {
 			$entity->attack($ev);
 		}
 		$ev = new EntityCombustByBlockEvent($this, $entity, 15);
-		PMServer::getInstance()->getPluginManager()->callEvent($ev);
+		$ev->call();
 		if(!$ev->isCancelled()){
 			$entity->setOnFire($ev->getDuration());
 		}
