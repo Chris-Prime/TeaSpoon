@@ -192,7 +192,7 @@ class Hopper extends Spawnable implements InventoryHolder, Container, Nameable {
 			//TODO: Delay it
 			// put items to target
 			if(!($this->getLevel()->getTile($this->getBlock()->getSide(Facing::DOWN)) instanceof Hopper)){ // vanilla way of doing it
-				$target = $this->getLevel()->getTile($this->getBlock()->getSide($this->getBlock()->getDamage()));
+				$target = $this->getLevel()->getTile($this->getBlock()->getSide($this->getBlock()->getFacing()));
 				if($target instanceof Container){
 					$inv = $target->getInventory();
 					foreach($this->inventory->getContents() as $item){
@@ -203,18 +203,18 @@ class Hopper extends Spawnable implements InventoryHolder, Container, Nameable {
 						$targetItem->setCount(1);
 
 						// Its now accurate
-						if($inv instanceof DoubleChestInventory){
-							/** @var $left ChestInventory */
-							/** @var $right ChestInventory */
-							$left = $inv->getLeftSide();
-							$right = $inv->getRightSide();
+						// if($inv instanceof DoubleChestInventory){
+						// 	/** @var $left ChestInventory */
+						// 	/** @var $right ChestInventory */
+						// 	$left = $inv->getLeftSide();
+						// 	$right = $inv->getRightSide();
 
-							if($right->canAddItem($targetItem)){
-								$inv = $right;
-							}else{
-								$inv = $left;
-							}
-						}
+						// 	if($right->canAddItem($targetItem)){
+						// 		$inv = $right;
+						// 	}else{
+						// 		$inv = $left;
+						// 	}
+						// }
 
 						if($inv->canAddItem($targetItem)){
 							if(!($target instanceof BrewingStand)){

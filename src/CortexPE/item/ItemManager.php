@@ -39,8 +39,32 @@ use CortexPE\Main;
 use pocketmine\item\{
 	Item, ItemFactory
 };
+use pocketmine\entity\EntityIds;
 
 class ItemManager {
+
+	const MOB_IDS = [
+		EntityIds::CHICKEN,
+		EntityIds::COW,
+		EntityIds::PIG,
+		EntityIds::SHEEP,
+		EntityIds::IRON_GOLEM,
+		EntityIds::ZOMBIE,
+		EntityIds::CREEPER,
+		EntityIds::SKELETON,
+		EntityIds::SPIDER,
+		EntityIds::ZOMBIE_PIGMAN,
+		EntityIds::SLIME,
+		EntityIds::ENDERMAN,
+		EntityIds::SILVERFISH,
+		EntityIds::CAVE_SPIDER,
+		EntityIds::GHAST,
+		EntityIds::BLAZE,
+		EntityIds::HUSK,
+		EntityIds::GUARDIAN,
+		EntityIds::ELDER_GUARDIAN
+	];
+
 	public static function init(){
 		ItemFactory::registerItem(new Boat(), true);
 		ItemFactory::registerItem(new LingeringPotion(), true);
@@ -56,6 +80,11 @@ class ItemManager {
 		ItemFactory::registerItem(new EndCrystal(), true);
 		ItemFactory::registerItem(new Bucket(Bucket::BUCKET), true);
 		ItemFactory::registerItem(new ArmorStand(), true);
+
+		ItemFactory::registerItem(new MonsterSpawner(), true);
+		foreach (self::MOB_IDS as $eid) {
+			ItemFactory::registerItem(new MonsterSpawner(MonsterSpawner::MOB_SPAWNER, $eid), true);
+		}
 		if(Main::$cars){
 			ItemFactory::registerItem(new Minecart(), true);
 		}

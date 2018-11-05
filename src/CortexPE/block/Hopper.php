@@ -43,6 +43,7 @@ use pocketmine\{
 	block\BlockToolType,
 	block\Transparent,
 	item\Item,
+	math\Facing,
 	math\Vector3,
 	nbt\tag\CompoundTag,
 	nbt\tag\IntTag,
@@ -54,8 +55,34 @@ use pocketmine\{
 class Hopper extends Transparent {
 	protected $id = self::HOPPER_BLOCK;
 
+	/** @var bool */
+	protected $enabled = false;// todo redstone
+
+	protected $facing = Facing::DOWN;
+
 	public function __construct(int $meta = 0){
 		$this->meta = $meta;
+	}
+
+	public function getFacing() : int {
+		return $this->facing;
+	}
+
+	public function readStateFromMeta(int $meta) : void{
+		$this->enabled = ($meta & 8) != 8;
+		$this->facing = $meta & 7;
+	}
+
+	public function writeStateToMeta() : int{
+		return $this->facing | ($this->enabled ? 0 : 8);
+    }
+
+    public function getStateBitmask() : int{
+		return 14;
+	}
+
+	public function isEnabled(): bool{
+		return $this->enabled;
 	}
 
 	public function canBeActivated(): bool{
@@ -67,7 +94,7 @@ class Hopper extends Transparent {
 	}
 
 	public function getName(): string{
-		return "Hopper";
+		return "Hopper Working";
 	}
 
 	public function getHardness(): float{
@@ -86,6 +113,10 @@ class Hopper extends Transparent {
 					if($player->isCreative() and Main::$limitedCreative){
 						return true;
 					}
+					if(!$t->canOpenWith($item->getCustomName())){
+						return true;
+					}
+					echo "adding window...\n";
 					$player->addWindow($t->getInventory());
 				}else{
 					$nbt = new CompoundTag("", [
@@ -100,6 +131,11 @@ class Hopper extends Transparent {
 					if($player->isCreative() and Main::$limitedCreative){
 						return true;
 					}
+
+					if(!$t->canOpenWith($item->getCustomName())){
+						return true;
+					}
+
 					$player->addWindow($t->getInventory());
 				}
 			}
@@ -110,14 +146,15 @@ class Hopper extends Transparent {
 
 	public function place(Item $item, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, Player $player = null): bool{
 		$faces = [
-			0 => 0,
-			1 => 0,
-			2 => 3,
-			3 => 2,
-			4 => 5,
-			5 => 4,
+			0 => Facing::DOWN,
+			1 => Facing::DOWN, // Not used
+			2 => Facing::SOUTH,
+			3 => Facing::NORTH,
+			4 => Facing::EAST,
+			5 => Facing::WEST
 		];
-		$this->meta = $faces[$face];
+
+		$this->facing = $faces[$face];
 		$this->getLevel()->setBlock($blockReplace, $this, true, true);
 
 		$nbt = new CompoundTag("", [

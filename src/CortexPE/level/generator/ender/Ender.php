@@ -94,9 +94,9 @@ class Ender extends Generator {
 	public function init(ChunkManager $level, Random $random): void{
 		$this->level = $level;
 		$this->random = $random;
-		$this->random->setSeed($this->level->getSeed());
+		$this->random->setSeed($this->seed);
 		$this->noiseBase = new Simplex($this->random, 4, 1 / 4, 1 / 64);
-		$this->random->setSeed($this->level->getSeed());
+		$this->random->setSeed($this->seed);
 		$pilar = new EnderPilar();
 		$pilar->setBaseAmount(0);
 		$pilar->setRandomAmount(0);
